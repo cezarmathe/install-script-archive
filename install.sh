@@ -1,25 +1,6 @@
 # !/bin/bash
 
-# echo "Setting ntp true"
-# timedatectl set-ntp true
-#
-# echo "Ext4 formatting"
-# mkfs.ext4 /dev/sda1
-#
-# echo "Mounting.."
-# mount /dev/sda1 /mount
-#
-# echo "Installing base and base-devel"
-# pacstrap /mnt base base-devel
-#
-# echo "Generating fs tab"
-# genfstab -U /mnt >> /mnt/etc/fstab
-#
-# cp packages.txt /mnt/packages.txt
-# cp post-install.sh /mnt/post-install.sh
-# arch-chroot /mnt post-install.sh
-
-
+# Params
 DRIVE='/dev/sda'
 
 PARTITION_NUMBER=1
@@ -28,7 +9,7 @@ HOSTNAME='cezar-PC'
 
 ROOT_PASSWORD='password'
 
-USER_NAME='username'
+USER_NAME='myusername'
 
 USER_PASSWORD='password'
 
@@ -41,7 +22,7 @@ WIRELESS_DEVICE="wlan0"
 
 setup() {
 
-    local drive="$DRIVE"1
+    local drive="$DRIVE$PARTITION_NUMBER"
 
     echo "Creating partition"
     create_partition "$DRIVE"
@@ -211,7 +192,7 @@ unmount_filesystem() {
 
 
 create_user() {
-    useradd --create-home -G power,storage,wheel "$USER_NAME"
+    useradd -G power,storage,wheel -m "$USER_NAME"
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
 
 }
