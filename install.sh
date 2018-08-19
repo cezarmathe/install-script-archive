@@ -19,6 +19,15 @@ VIDEO_DRIVER="nouveau"
 
 WIRELESS_DEVICE="wlan0"
 
+PARTITION_START="1"
+
+PARTITION_END="100%"
+
+
+params_setup() {
+
+}
+
 
 setup() {
 
@@ -105,7 +114,7 @@ config() {
 
 
 set_hostname() {
-      echo "$HOSTNAME" > /etc/hostname
+    echo "$HOSTNAME" > /etc/hostname
 }
 
 
@@ -169,7 +178,7 @@ create_partition() {
 
     parted -s "$part" \
         mklabel msdos \
-        mkpart primary ext4 1 100% \
+        mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
         set 1 boot on
 }
 
@@ -203,6 +212,8 @@ root_passwd() {
 }
 
 
+
+params_setup
 
 if [ "$1" == "configuration" ]
 then
