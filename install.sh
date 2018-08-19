@@ -156,6 +156,7 @@ config_bootloader() {
     pacman -Syy --noconfirm
     pacman -S grub --noconfirm
     grub-install --target=i386-pc "$DRIVE"
+    grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 
@@ -210,13 +211,13 @@ unmount_filesystem() {
 
 
 create_user() {
-    useradd --create-home -aG power,storage,wheel "$USER_NAME"
+    useradd --create-home -G power,storage,wheel "$USER_NAME"
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
 
 }
 
 
-user_passwd() {
+root_passwd() {
     echo -en "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
 }
 
