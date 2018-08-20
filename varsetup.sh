@@ -32,6 +32,8 @@ var_setup() {
 
     var "Timezone (Region/City i.e. Europe/Bucharest): " TIMEZONE
 
+    chmod 777 *
+
     add_space 3
 
     echo "Starting the installation process"
