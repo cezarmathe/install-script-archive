@@ -12,4 +12,4 @@ wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/vars
 
 ./varsetup.sh &&
 
-./install.sh
+# ./install.sh
