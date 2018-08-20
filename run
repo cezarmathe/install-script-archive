@@ -6,11 +6,9 @@ mkdir install-script-files
 
 cd install-script-files
 
-wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/install.sh" && chmod +x install.sh
+wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/install.sh" && chmod +x install.sh &&
 
-wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/varsetup" && chmod +x varsetup.sh
-
-wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/install.sh" && chmod +x pkg-setup.sh
+wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/varsetup" && chmod +x varsetup.sh &&
 
 ./varsetup.sh
 
