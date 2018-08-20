@@ -1,31 +1,42 @@
 # !/bin/bash
 
 # Params
-DRIVE='/dev/sda'
+DRIVE=''
 
-PARTITION_NUMBER=1
+BOOTLOADER_DRIVE=''
 
-HOSTNAME='cezar-PC'
+PARTITION_NUMBER=''
 
-ROOT_PASSWORD='password'
+HOSTNAME=''
 
-USER_NAME='myusername'
+ROOT_PASSWORD=''
 
-USER_PASSWORD='password'
+USER_NAME=''
 
-TIMEZONE='Europe/Bucharest'
+USER_PASSWORD=''
 
-VIDEO_DRIVER="nouveau"
+TIMEZONE=''
 
-WIRELESS_DEVICE="wlan0"
+# VIDEO_DRIVER="nouveau"
+#
+# WIRELESS_DEVICE="wlan0"
 
-PARTITION_START="1"
+PARTITION_START=''
 
-PARTITION_END="100%"
+PARTITION_END=''
 
 
 params_setup() {
-
+    DRIVE=cat /vars/DRIVE
+    BOOTLOADER_DRIVE=cat /vars/BOOTLOADER_DRIVE
+    PARTITION_NUMBER=cat /vars/PARTITION_NUMBER
+    PARTITION_START=cat /vars/PARTITION_START
+    PARTITION_END=cat /vars/PARTITION_END
+    HOSTNAME=cat /vars/HOSTNAME
+    ROOT_PASSWORD=cat /vars/ROOT_PASSWORD
+    TIMEZONE=cat /vars/TIMEZONE
+    USER_NAME=cat /vars/USER_NAME
+    USER_PASSWORD=cat /vars/USER_PASSWORD
 }
 
 
@@ -92,14 +103,14 @@ config() {
     echo "Configuring sudo"
     config_sudo
 
-    echo "Installing packages"
-    # install_packages
+    # echo "Installing packages"
+    install_packages
 
-    echo "Installing aurman"
-    # install_aurman
+    # echo "Installing aurman"
+    install_aurman
 
-    echo "Installing AUR packages"
-    # install_aur_packages
+    # echo "Installing AUR packages"
+    install_aur_packages
 
     echo "Changing the root password"
     root_passwd
@@ -111,6 +122,50 @@ config() {
 
 }
 
+
+
+install_native_packages() {
+    read -p "Do you want to install native packages from a package list?(y/n): " INSTALL
+    if [[ INSTALL == "y" ]]; then
+        read -p "Enter the URL where the package list is located:" URL
+        wget -q URL
+        read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
+        if [[ -z "$NAME" ]]; then
+            ./pgk-install native
+        else
+            ./pkg-install native "$NAME"
+        fi
+    else
+        echo "Skipping"
+    fi
+}
+
+
+install_aurman() {
+    read -p "Do you want to install aurman?(y/n): " INSTALL
+    if [[ INSTALL == "y" ]]; then
+
+    else
+        echo "Skipping"
+    fi
+}
+
+
+install_aur_packages() {
+    read -p "Do you want to install aur packages from a package list?(y/n): " INSTALL
+    if [[ INSTALL == "y" ]]; then
+        read -p "Enter the URL where the package list is located:" URL
+        wget -q URL
+        read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
+        if [[ -z "$NAME" ]]; then
+            ./pgk-install aur
+        else
+            ./pkg-install aur "$NAME"
+        fi
+    else
+        echo "Skipping"
+    fi
+}
 
 
 set_hostname() {
@@ -144,8 +199,8 @@ set_fstab() {
 
 config_bootloader() {
     pacman -Syy --noconfirm
-    pacman -S grub --noconfirm
-    grub-install --target=i386-pc "$DRIVE"
+    pacman -S grub os-prober --noconfirm
+    grub-install --target=i386-pc "$BOOTLOADER_DRIVE"
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 
@@ -215,8 +270,7 @@ root_passwd() {
 
 params_setup
 
-if [ "$1" == "configuration" ]
-then
+if [ "$1" == "configuration" ]; then
     config
 else
     setup
