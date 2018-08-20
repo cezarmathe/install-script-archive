@@ -27,16 +27,16 @@ PARTITION_END=''
 
 
 params_setup() {
-    DRIVE=$(<vars/DRIVE)
-    BOOTLOADER_DRIVE=$(<vars/BOOTLOADER_DRIVE)
-    PARTITION_NUMBER=$(<vars/PARTITION_NUMBER)
-    PARTITION_START=$(<vars/PARTITION_START)
-    PARTITION_END=$(<vars/PARTITION_END)
-    HOSTNAME=$(<vars/HOSTNAME)
-    ROOT_PASSWORD=$(<vars/ROOT_PASSWORD)
-    TIMEZONE=$(<vars/TIMEZONE)
-    USER_NAME=$(<vars/USER_NAME)
-    USER_PASSWORD=$(<vars/USER_PASSWORD)
+    DRIVE=`cat vars/DRIVE`
+    BOOTLOADER_DRIVE=`cat vars/BOOTLOADER_DRIVE`
+    PARTITION_NUMBER=`cat vars/PARTITION_NUMBER`
+    PARTITION_START=`cat vars/PARTITION_START`
+    PARTITION_END=`cat vars/PARTITION_END`
+    HOSTNAME=`cat vars/HOSTNAME`
+    ROOT_PASSWORD=`cat vars/ROOT_PASSWORD`
+    TIMEZONE=`cat vars/TIMEZONE`
+    USER_NAME=`cat vars/USER_NAME`
+    USER_PASSWORD=`cat vars/USER_PASSWORD`
 }
 
 
@@ -64,6 +64,7 @@ setup() {
 
     echo "Changing root to continue installation"
     cp $0 /mnt/setup.sh
+    cp -r vars/* /mnt/vars
     arch-chroot /mnt ./setup.sh configuration
 
     if [ -f /mnt/setup.sh ]
@@ -119,6 +120,7 @@ config() {
     create_user
 
     rm /setup.sh
+    rm -r vars
 
 }
 

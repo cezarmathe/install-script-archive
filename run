@@ -10,6 +10,6 @@ wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/inst
 
 wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/master/varsetup.sh" && chmod +x varsetup.sh &&
 
-./varsetup.sh
+./varsetup.sh &&
 
-# ./install.sh
+./install.sh
