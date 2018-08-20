@@ -144,7 +144,7 @@ install_native_packages() {
 install_aurman() {
     read -p "Do you want to install aurman?(y/n): " INSTALL
     if [[ INSTALL == "y" ]]; then
-
+        ./pkg-install.sh aurman
     else
         echo "Skipping"
     fi
