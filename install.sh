@@ -27,16 +27,16 @@ PARTITION_END=''
 
 
 params_setup() {
-    DRIVE="cat $(pwd)/vars/DRIVE"
-    BOOTLOADER_DRIVE="cat $(pwd)/vars/BOOTLOADER_DRIVE"
-    PARTITION_NUMBER="cat $(pwd)/vars/PARTITION_NUMBER"
-    PARTITION_START="cat $(pwd)/vars/PARTITION_START"
-    PARTITION_END="cat $(pwd)/vars/PARTITION_END"
-    HOSTNAME="cat $(pwd)/vars/HOSTNAME"
-    ROOT_PASSWORD="cat $(pwd)/vars/ROOT_PASSWORD"
-    TIMEZONE="cat $(pwd)/vars/TIMEZONE"
-    USER_NAME="cat $(pwd)/vars/USER_NAME"
-    USER_PASSWORD="cat $(pwd)/vars/USER_PASSWORD"
+    DRIVE=$(<vars/DRIVE)
+    BOOTLOADER_DRIVE=$(<vars/BOOTLOADER_DRIVE)
+    PARTITION_NUMBER=$(<vars/PARTITION_NUMBER)
+    PARTITION_START=$(<vars/PARTITION_START)
+    PARTITION_END=$(<vars/PARTITION_END)
+    HOSTNAME=$(<vars/HOSTNAME)
+    ROOT_PASSWORD=$(<vars/ROOT_PASSWORD)
+    TIMEZONE=$(<vars/TIMEZONE)
+    USER_NAME=$(<vars/USER_NAME)
+    USER_PASSWORD=$(<vars/USER_PASSWORD)
 }
 
 
