@@ -24,7 +24,7 @@ install_aur_packages() {
 
 
 if [[ "$1" == "native" ]]; then
-    if [[ -z "$2" ]]; then
+    # if [[ -z "$2" ]]; then
     #     echo "Installing native packages from text file $PKG_LIST_NATIVE"
     #     install_native_packages
     # else

@@ -70,6 +70,9 @@ setup() {
 
     arch-chroot /mnt ./install.sh native
 
+    mkdir /mnt/aurman-install
+    arch-chroot /mnt chown "$USER_NAME" aurman
+
     arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
 
     arch-chroot /mnt ./install.sh aur
@@ -154,6 +157,7 @@ install_native_packages() {
 
 
 install_aurman() {
+    cd aurman-install
     read -p "Do you want to install aurman?(y/n): " yn
     case $yn in
         [Yy]* ) ./pkg-install.sh aurman
@@ -168,7 +172,7 @@ install_aur_packages() {
     case $yn in
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
                 curl -L "$URL" -o packages-aur.txt
-                read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
+                # read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
                 # if [[ -z "$NAME" ]]; then
                 #     ./pkg-install.sh aur
                 # else
