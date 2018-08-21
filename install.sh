@@ -70,8 +70,6 @@ setup() {
 
     arch-chroot /mnt ./install.sh native
 
-    pacman --noconfirm -Syy
-    pacman -S git --needed --noconfirm
     arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
 
     arch-chroot /mnt ./install.sh aur
@@ -133,6 +131,8 @@ post_install() {
 
 
 install_native_packages() {
+    pacman --noconfirm -Syy
+    pacman -S git --needed --noconfirm
     read -p "Do you want to install native packages from a package list?(y/n): " yn
     case $yn in
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
@@ -169,11 +169,12 @@ install_aur_packages() {
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
                 curl -L "$URL" -o packages-aur.txt
                 read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
-                if [[ -z "$NAME" ]]; then
-                    ./pkg-install.sh aur
-                else
-                    ./pkg-install.sh aur "$NAME"
-                fi
+                # if [[ -z "$NAME" ]]; then
+                #     ./pkg-install.sh aur
+                # else
+                #     ./pkg-install.sh aur "$NAME"
+                # fi
+                ./pkg-install.sh aur
                 break;;
 
         [Nn]* ) echo "Skipping"

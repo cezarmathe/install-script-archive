@@ -25,22 +25,24 @@ install_aur_packages() {
 
 if [[ "$1" == "native" ]]; then
     if [[ -z "$2" ]]; then
-        echo "Installing native packages from text file $PKG_LIST_NATIVE"
-        install_native_packages
-    else
-        PKG_LIST_NATIVE="$2"
-        echo "Installing native packages from text file $PKG_LIST_NATIVE"
-        install_native_packages
-    fi
+    #     echo "Installing native packages from text file $PKG_LIST_NATIVE"
+    #     install_native_packages
+    # else
+    #     PKG_LIST_NATIVE="$2"
+    #     echo "Installing native packages from text file $PKG_LIST_NATIVE"
+    #     install_native_packages
+    # fi
+    install_native_packages
 elif [[ "$1" == "aurman" ]]; then
     install_aurman
 elif [[ "$1" == "aur" ]]; then
-    if [[ -z "$2" ]]; then
-        echo "Installing aur packages from text file $PKG_LIST_AUR"
-        install_aur_packages
-    else
-        PKG_LIST_AUR="$2"
-        echo "Installing aur packages from text file $PKG_LIST_AUR"
-        install
-    fi
+    # if [[ -z "$2" ]]; then
+    #     echo "Installing aur packages from text file $PKG_LIST_AUR"
+    #     install_aur_packages
+    # else
+    #     PKG_LIST_AUR="$2"
+    #     echo "Installing aur packages from text file $PKG_LIST_AUR"
+    #     install
+    # fi
+    install_aur_packages
 fi
