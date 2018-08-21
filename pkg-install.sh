@@ -11,11 +11,19 @@ install_native_packages() {
 }
 
 install_aurman() {
+    pacman -S git --needed --noconfirm
+
+    exit
+    arch-chroot -u "&USER_NAME" /mnt
+
     git clone https://aur.archlinux.org/aurman.git
     cd aurman
     makepkg -si
     cd ..
-    rm aurman
+    rm -r aurman
+
+    exit
+    arch-chroot /mnt
 }
 
 install_aur_packages() {
@@ -32,9 +40,9 @@ if [[ "$1" == "native" ]]; then
         echo "Installing native packages from text file $PKG_LIST_NATIVE"
         install_native_packages
     fi
-elif [[ "$2" == "aurman" ]]; then
+elif [[ "$1" == "aurman" ]]; then
     install_aurman
-elif [[ "$3" == "aur" ]]; then
+elif [[ "$1" == "aur" ]]; then
     if [[ -z "$2" ]]; then
         echo "Installing aur packages from text file $PKG_LIST_AUR"
         install_aur_packages

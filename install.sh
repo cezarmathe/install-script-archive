@@ -64,6 +64,7 @@ setup() {
 
     echo "Changing root to continue installation"
     cp $0 /mnt/setup.sh
+    cp pkg-install.sh /mnt/pkg-install.sh
     cp -r vars /mnt/vars
     arch-chroot /mnt ./setup.sh configuration
 
@@ -120,6 +121,7 @@ config() {
     create_user
 
     rm /setup.sh
+    rm /pkg-install.sh
     rm -r vars
 
 }
