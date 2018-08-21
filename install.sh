@@ -113,8 +113,6 @@ config() {
 
     ./install.sh native
 
-    post_install
-
 }
 
 
@@ -130,8 +128,8 @@ install_native_packages() {
     read -p "Do you want to install native packages from a package list?(y/n): " yn
     case $yn in
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
-                wget -q URL
-                read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
+                curl -L "$URL" -o packages.txt
+                # read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
                 if [[ -z "$NAME" ]]; then
                     ./pgk-install native
                 else
@@ -166,7 +164,7 @@ install_aur_packages() {
     read -p "Do you want to install aur packages from a package list?(y/n): " yn
     case $yn in
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
-                wget -q URL
+                curl -L "$URL" -o packages-aur.txt
                 read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
                 if [[ -z "$NAME" ]]; then
                     ./pgk-install aur
@@ -286,11 +284,11 @@ params_setup
 
 if [ "$1" == "configuration" ]; then
     config
-elif [[ "$2" == "native" ]]; then
+elif [[ "$1" == "native" ]]; then
     install_native_packages
-elif [[ "$2" == "aurman" ]]; then
+elif [[ "$1" == "aurman" ]]; then
     install_aurman
-elif [[ "$2" == "aur" ]]; then
+elif [[ "$1" == "aur" ]]; then
     install_aur_packages
 else
     setup
