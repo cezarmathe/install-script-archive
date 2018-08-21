@@ -70,6 +70,7 @@ setup() {
 
     arch-chroot /mnt ./install.sh native
 
+    pacman --noconfirm -Syy
     pacman -S git --needed --noconfirm
     arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
 
@@ -155,7 +156,7 @@ install_native_packages() {
 install_aurman() {
     read -p "Do you want to install aurman?(y/n): " yn
     case $yn in
-        [Yy]* ) ./install.sh aurman
+        [Yy]* ) ./pkg-install.sh aurman
                 break;;
         [Nn]* ) echo "Skipping"
     esac
