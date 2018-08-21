@@ -27,16 +27,16 @@ PARTITION_END=''
 
 
 params_setup() {
-    DRIVE=cat vars/DRIVE
-    BOOTLOADER_DRIVE=cat vars/BOOTLOADER_DRIVE
-    PARTITION_NUMBER=cat vars/PARTITION_NUMBER
-    PARTITION_START=cat vars/PARTITION_START
-    PARTITION_END=cat vars/PARTITION_END
-    HOSTNAME=cat vars/HOSTNAME
-    ROOT_PASSWORD=cat vars/ROOT_PASSWORD
-    TIMEZONE=cat vars/TIMEZONE
-    USER_NAME=cat vars/USER_NAME
-    USER_PASSWORD=cat vars/USER_PASSWORD
+    DRIVE=`cat vars/DRIVE`
+    BOOTLOADER_DRIVE=`cat vars/BOOTLOADER_DRIVE`
+    PARTITION_NUMBER=`cat vars/PARTITION_NUMBER`
+    PARTITION_START=`cat vars/PARTITION_START`
+    PARTITION_END=`cat vars/PARTITION_END`
+    HOSTNAME=`cat vars/HOSTNAME`
+    ROOT_PASSWORD=`cat vars/ROOT_PASSWORD`
+    TIMEZONE=`cat vars/TIMEZONE`
+    USER_NAME=`cat vars/USER_NAME`
+    USER_PASSWORD=`cat vars/USER_PASSWORD`
 }
 
 
@@ -62,11 +62,24 @@ setup() {
     echo "Setting the fs tab"
     set_fstab
 
-    echo "Changing root to continue installation"
-    cp $0 /mnt/setup.sh
-    arch-chroot /mnt ./setup.sh configuration
+    echo "Changing root to continue with system configuration"
+    cp $0 /mnt/install.sh
+    cp pkg-install.sh /mnt/pkg-install.sh
+    cp -r vars /mnt/vars
+    arch-chroot /mnt ./install.sh configuration
 
-    if [ -f /mnt/setup.sh ]
+    arch-chroot /mnt ./install.sh native
+
+    mkdir /mnt/aurman-install
+    arch-chroot /mnt chown "$USER_NAME" aurman
+
+    arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
+
+    arch-chroot /mnt ./install.sh aur
+
+    post_install
+
+    if [ -f /mnt/install.sh ]
     then
         echo 'Error inside chroot'
     else
@@ -103,68 +116,74 @@ config() {
     echo "Configuring sudo"
     config_sudo
 
-    # echo "Installing packages"
-    install_packages
-
-    # echo "Installing aurman"
-    install_aurman
-
-    # echo "Installing AUR packages"
-    install_aur_packages
-
     echo "Changing the root password"
     root_passwd
 
     echo "Creating the initial user"
     create_user
 
-    rm /setup.sh
-
 }
 
 
 
+post_install() {
+    rm install.sh
+    rm pkg-install.sh
+    rm -r vars
+}
+
+
 install_native_packages() {
-    read -p "Do you want to install native packages from a package list?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        read -p "Enter the URL where the package list is located:" URL
-        wget -q URL
-        read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
-        if [[ -z "$NAME" ]]; then
-            ./pgk-install native
-        else
-            ./pkg-install native "$NAME"
-        fi
-    else
-        echo "Skipping"
-    fi
+    pacman --noconfirm -Syy
+    pacman -S git --needed --noconfirm
+    read -p "Do you want to install native packages from a package list?(y/n): " yn
+    case $yn in
+        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
+                curl -L "$URL" -o packages.txt
+                # read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
+                # if [[ -z "$NAME" ]]; then
+                #     ./pgk-install.sh native
+                # else
+                #     ./pkg-install.sh native "$NAME"
+                # fi
+                ./pkg-install.sh native
+                exit
+                break;;
+
+        [Nn]* ) echo "Skipping"
+                break;;
+    esac
 }
 
 
 install_aurman() {
-    read -p "Do you want to install aurman?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        ./pkg-install.sh aurman
-    else
-        echo "Skipping"
-    fi
+    cd aurman-install
+    read -p "Do you want to install aurman?(y/n): " yn
+    case $yn in
+        [Yy]* ) ./pkg-install.sh aurman
+                break;;
+        [Nn]* ) echo "Skipping"
+    esac
 }
 
 
 install_aur_packages() {
-    read -p "Do you want to install aur packages from a package list?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        read -p "Enter the URL where the package list is located:" URL
-        wget -q URL
-        read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
-        if [[ -z "$NAME" ]]; then
-            ./pgk-install aur
-        else
-            ./pkg-install aur "$NAME"
-        fi
-    else
-        echo "Skipping"
-    fi
+    read -p "Do you want to install aur packages from a package list?(y/n): " yn
+    case $yn in
+        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
+                curl -L "$URL" -o packages-aur.txt
+                # read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
+                # if [[ -z "$NAME" ]]; then
+                #     ./pkg-install.sh aur
+                # else
+                #     ./pkg-install.sh aur "$NAME"
+                # fi
+                ./pkg-install.sh aur
+                break;;
+
+        [Nn]* ) echo "Skipping"
+                break;;
+    esac
 }
 
 
@@ -272,6 +291,12 @@ params_setup
 
 if [ "$1" == "configuration" ]; then
     config
+elif [[ "$1" == "native" ]]; then
+    install_native_packages
+elif [[ "$1" == "aurman" ]]; then
+    install_aurman
+elif [[ "$1" == "aur" ]]; then
+    install_aur_packages
 else
     setup
 fi
