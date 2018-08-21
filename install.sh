@@ -170,7 +170,7 @@ install_aur_packages() {
                 curl -L "$URL" -o packages-aur.txt
                 read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
                 if [[ -z "$NAME" ]]; then
-                    ./pgk-install.sh aur
+                    ./pkg-install.sh aur
                 else
                     ./pkg-install.sh aur "$NAME"
                 fi
