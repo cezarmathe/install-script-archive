@@ -70,6 +70,7 @@ setup() {
 
     arch-chroot /mnt ./install.sh native
 
+    pacman -S git --needed --noconfirm
     arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
 
     arch-chroot /mnt ./install.sh aur
@@ -124,8 +125,8 @@ config() {
 
 
 post_install() {
-    rm /setup.sh
-    rm /pkg-install.sh
+    rm install.sh
+    rm pkg-install.sh
     rm -r vars
 }
 
@@ -142,6 +143,7 @@ install_native_packages() {
                 #     ./pkg-install.sh native "$NAME"
                 # fi
                 ./pkg-install.sh native
+                exit
                 break;;
 
         [Nn]* ) echo "Skipping"
@@ -153,8 +155,7 @@ install_native_packages() {
 install_aurman() {
     read -p "Do you want to install aurman?(y/n): " yn
     case $yn in
-        [Yy]* ) pacman -S git --needed --noconfirm
-                ./install.sh aurman
+        [Yy]* ) ./install.sh aurman
                 break;;
         [Nn]* ) echo "Skipping"
     esac
@@ -168,9 +169,9 @@ install_aur_packages() {
                 curl -L "$URL" -o packages-aur.txt
                 read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
                 if [[ -z "$NAME" ]]; then
-                    ./pgk-install aur
+                    ./pgk-install.sh aur
                 else
-                    ./pkg-install aur "$NAME"
+                    ./pkg-install.sh aur "$NAME"
                 fi
                 break;;
 
