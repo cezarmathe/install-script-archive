@@ -63,12 +63,12 @@ setup() {
     set_fstab
 
     echo "Changing root to continue installation"
-    cp $0 /mnt/setup.sh
+    cp $0 /mnt/install.sh
     cp pkg-install.sh /mnt/pkg-install.sh
     cp -r vars /mnt/vars
-    arch-chroot /mnt ./setup.sh configuration
+    arch-chroot /mnt ./install.sh configuration
 
-    if [ -f /mnt/setup.sh ]
+    if [ -f /mnt/install.sh ]
     then
         echo 'Error inside chroot'
     else
@@ -105,27 +105,35 @@ config() {
     echo "Configuring sudo"
     config_sudo
 
-    # echo "Installing packages"
-    install__native_packages
-
-    # echo "Installing aurman"
-    install_aurman
-
-    # echo "Installing AUR packages"
-    install_aur_packages
-
     echo "Changing the root password"
     root_passwd
 
     echo "Creating the initial user"
     create_user
 
-    rm /setup.sh
-    rm /pkg-install.sh
-    rm -r vars
+    ./install.sh native
+
+    post_install
 
 }
 
+
+install_packages() {
+    if [[ "$1" == "native"]]; then
+        install_native_packages
+    elif [[ "$1" == "aurman" ]]; then
+        install_aurman
+    elif [[ "$1" ==  ]]; then
+      #statements
+    fi
+}
+
+
+post_install() {
+    rm /setup.sh
+    rm /pkg-install.sh
+    rm -r vars
+}
 
 
 install_native_packages() {
@@ -144,16 +152,23 @@ install_native_packages() {
         [Nn]* ) echo "Skipping"
                 break;;
     esac
+    ./install.sh aurman
 }
 
 
 install_aurman() {
     read -p "Do you want to install aurman?(y/n): " yn
     case $yn in
-        [Yy]* ) ./pkg-install.sh aurman
+        [Yy]* ) pacman -S git --needed --noconfirm
+                exit
+                arch-chroot -u "&USER_NAME" /mnt
+                ./install.sh aurman
+                exit
+                arch-chroot /mnt
                 break;;
         [Nn]* ) echo "Skipping"
     esac
+    ./install.sh aur
 }
 
 
@@ -173,6 +188,7 @@ install_aur_packages() {
         [Nn]* ) echo "Skipping"
                 break;;
     esac
+    post_install
 }
 
 
@@ -280,6 +296,12 @@ params_setup
 
 if [ "$1" == "configuration" ]; then
     config
+elif [[ "$2" == "native" ]]; then
+    install_native_packages
+elif [[ "$2" == "aurman" ]]; then
+    install_aurman
+elif [[ "$2" == "aur" ]]; then
+    install_aur_packages
 else
     setup
 fi

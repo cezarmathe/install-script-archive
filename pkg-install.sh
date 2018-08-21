@@ -11,19 +11,11 @@ install_native_packages() {
 }
 
 install_aurman() {
-    pacman -S git --needed --noconfirm
-
-    exit
-    arch-chroot -u "&USER_NAME" /mnt
-
     git clone https://aur.archlinux.org/aurman.git
     cd aurman
     makepkg -si
     cd ..
     rm -r aurman
-
-    exit
-    arch-chroot /mnt
 }
 
 install_aur_packages() {

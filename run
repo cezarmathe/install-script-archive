@@ -10,6 +10,8 @@ wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/testing/ins
 
 wget -q "https://raw.githubusercontent.com/cezarmathe/install-script/testing/varsetup.sh" && chmod +x varsetup.sh &&
 
+wget -g "https://raw.githubusercontent.com/cezarmathe/install-script/testing/pkg-install.sh" && chmod +x pkg-install.sh &&
+
 ./varsetup.sh &&
 
 ./install.sh
