@@ -6,8 +6,8 @@ PKG_LIST_AUR='packages-aur.txt'
 
 
 install_native_packages() {
-    pacman -Syy --no-confirm
-    pacman --needed --no-confirm -S - < packages.txt
+    pacman -Syy --noconfirm
+    pacman --needed --noconfirm -S - < packages.txt
 }
 
 install_aurman() {
@@ -19,7 +19,7 @@ install_aurman() {
 }
 
 install_aur_packages() {
-    aurman -S - < packages-aur.txt
+    aurman --needed --noconfirm -S - < packages-aur.txt
 }
 
 
