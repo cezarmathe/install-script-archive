@@ -118,16 +118,6 @@ config() {
 }
 
 
-install_packages() {
-    if [[ "$1" == "native"]]; then
-        install_native_packages
-    elif [[ "$1" == "aurman" ]]; then
-        install_aurman
-    elif [[ "$1" ==  ]]; then
-      #statements
-    fi
-}
-
 
 post_install() {
     rm /setup.sh
