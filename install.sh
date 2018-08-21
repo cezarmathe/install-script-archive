@@ -62,11 +62,19 @@ setup() {
     echo "Setting the fs tab"
     set_fstab
 
-    echo "Changing root to continue installation"
+    echo "Changing root to continue with system configuration"
     cp $0 /mnt/install.sh
     cp pkg-install.sh /mnt/pkg-install.sh
     cp -r vars /mnt/vars
     arch-chroot /mnt ./install.sh configuration
+
+    arch-chroot /mnt ./install.sh native
+
+    arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
+
+    arch-chroot /mnt ./install.sh aur
+
+    post_install
 
     if [ -f /mnt/install.sh ]
     then
@@ -111,8 +119,6 @@ config() {
     echo "Creating the initial user"
     create_user
 
-    ./install.sh native
-
 }
 
 
@@ -130,17 +136,17 @@ install_native_packages() {
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
                 curl -L "$URL" -o packages.txt
                 # read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
-                if [[ -z "$NAME" ]]; then
-                    ./pgk-install native
-                else
-                    ./pkg-install native "$NAME"
-                fi
+                # if [[ -z "$NAME" ]]; then
+                #     ./pgk-install.sh native
+                # else
+                #     ./pkg-install.sh native "$NAME"
+                # fi
+                ./pkg-install.sh native
                 break;;
 
         [Nn]* ) echo "Skipping"
                 break;;
     esac
-    ./install.sh aurman
 }
 
 
@@ -148,15 +154,10 @@ install_aurman() {
     read -p "Do you want to install aurman?(y/n): " yn
     case $yn in
         [Yy]* ) pacman -S git --needed --noconfirm
-                exit
-                arch-chroot -u "&USER_NAME" /mnt
                 ./install.sh aurman
-                exit
-                arch-chroot /mnt
                 break;;
         [Nn]* ) echo "Skipping"
     esac
-    ./install.sh aur
 }
 
 
@@ -176,7 +177,6 @@ install_aur_packages() {
         [Nn]* ) echo "Skipping"
                 break;;
     esac
-    post_install
 }
 
 
