@@ -64,7 +64,7 @@ setup() {
 
     echo "Changing root to continue installation"
     cp $0 /mnt/setup.sh
-    cp -r vars/* /mnt/vars
+    cp -r vars /mnt/vars
     arch-chroot /mnt ./setup.sh configuration
 
     if [ -f /mnt/setup.sh ]
@@ -105,7 +105,7 @@ config() {
     config_sudo
 
     # echo "Installing packages"
-    install_packages
+    install__native_packages
 
     # echo "Installing aurman"
     install_aurman
@@ -127,46 +127,50 @@ config() {
 
 
 install_native_packages() {
-    read -p "Do you want to install native packages from a package list?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        read -p "Enter the URL where the package list is located:" URL
-        wget -q URL
-        read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
-        if [[ -z "$NAME" ]]; then
-            ./pgk-install native
-        else
-            ./pkg-install native "$NAME"
-        fi
-    else
-        echo "Skipping"
-    fi
+    read -p "Do you want to install native packages from a package list?(y/n): " yn
+    case $yn in
+        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
+                wget -q URL
+                read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
+                if [[ -z "$NAME" ]]; then
+                    ./pgk-install native
+                else
+                    ./pkg-install native "$NAME"
+                fi
+                break;;
+
+        [Nn]* ) echo "Skipping"
+                break;;
+    esac
 }
 
 
 install_aurman() {
-    read -p "Do you want to install aurman?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        ./pkg-install.sh aurman
-    else
-        echo "Skipping"
-    fi
+    read -p "Do you want to install aurman?(y/n): " yn
+    case $yn in
+        [Yy]* ) ./pkg-install.sh aurman
+                break;;
+        [Nn]* ) echo "Skipping"
+    esac
 }
 
 
 install_aur_packages() {
-    read -p "Do you want to install aur packages from a package list?(y/n): " INSTALL
-    if [[ INSTALL == "y" ]]; then
-        read -p "Enter the URL where the package list is located:" URL
-        wget -q URL
-        read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
-        if [[ -z "$NAME" ]]; then
-            ./pgk-install aur
-        else
-            ./pkg-install aur "$NAME"
-        fi
-    else
-        echo "Skipping"
-    fi
+    read -p "Do you want to install aur packages from a package list?(y/n): " yn
+    case $yn in
+        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
+                wget -q URL
+                read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
+                if [[ -z "$NAME" ]]; then
+                    ./pgk-install aur
+                else
+                    ./pkg-install aur "$NAME"
+                fi
+                break;;
+
+        [Nn]* ) echo "Skipping"
+                break;;
+    esac
 }
 
 
