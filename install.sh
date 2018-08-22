@@ -1,6 +1,6 @@
 # !/bin/bash
 
-# Params
+# Parameters
 DRIVE=''
 
 BOOTLOADER_DRIVE=''
@@ -16,10 +16,6 @@ USER_NAME=''
 USER_PASSWORD=''
 
 TIMEZONE=''
-
-# VIDEO_DRIVER="nouveau"
-#
-# WIRELESS_DEVICE="wlan0"
 
 PARTITION_START=''
 
@@ -69,13 +65,6 @@ setup() {
     arch-chroot /mnt ./install.sh configuration
 
     arch-chroot /mnt ./install.sh native
-
-    mkdir /mnt/aurman-install
-    arch-chroot /mnt chown "$USER_NAME" aurman
-
-    arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
-
-    arch-chroot /mnt ./install.sh aur
 
     post_install
 
@@ -127,9 +116,11 @@ config() {
 
 
 post_install() {
+    arch-chroot /mnt
     rm install.sh
     rm pkg-install.sh
     rm -r vars
+    exit
 }
 
 
@@ -140,45 +131,8 @@ install_native_packages() {
     case $yn in
         [Yy]* ) read -p "Enter the URL where the package list is located:" URL
                 curl -L "$URL" -o packages.txt
-                # read -p "If the file name is diffrent than packages.txt, enter the name: "  NAME
-                # if [[ -z "$NAME" ]]; then
-                #     ./pgk-install.sh native
-                # else
-                #     ./pkg-install.sh native "$NAME"
-                # fi
                 ./pkg-install.sh native
                 exit
-                break;;
-
-        [Nn]* ) echo "Skipping"
-                break;;
-    esac
-}
-
-
-install_aurman() {
-    cd aurman-install
-    read -p "Do you want to install aurman?(y/n): " yn
-    case $yn in
-        [Yy]* ) ./pkg-install.sh aurman
-                break;;
-        [Nn]* ) echo "Skipping"
-    esac
-}
-
-
-install_aur_packages() {
-    read -p "Do you want to install aur packages from a package list?(y/n): " yn
-    case $yn in
-        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
-                curl -L "$URL" -o packages-aur.txt
-                # read -p "If the file name is diffrent than packages-aur.txt, enter the name: "  NAME
-                # if [[ -z "$NAME" ]]; then
-                #     ./pkg-install.sh aur
-                # else
-                #     ./pkg-install.sh aur "$NAME"
-                # fi
-                ./pkg-install.sh aur
                 break;;
 
         [Nn]* ) echo "Skipping"
@@ -277,7 +231,6 @@ unmount_filesystem() {
 create_user() {
     useradd -G power,storage,wheel -m "$USER_NAME"
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
-
 }
 
 
@@ -286,17 +239,12 @@ root_passwd() {
 }
 
 
-
 params_setup
 
 if [ "$1" == "configuration" ]; then
     config
 elif [[ "$1" == "native" ]]; then
     install_native_packages
-elif [[ "$1" == "aurman" ]]; then
-    install_aurman
-elif [[ "$1" == "aur" ]]; then
-    install_aur_packages
 else
     setup
 fi
