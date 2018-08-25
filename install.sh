@@ -52,11 +52,11 @@ setup() {
     echo "Installing the base system"
     install_base_system
 
-    echo "Creating the swapfile"
-    create_swap
-
     echo "Setting the fs tab"
     set_fstab
+
+    echo "Creating the swapfile"
+    create_swap
 
     echo "Changing root to continue with system configuration"
     cp $0 /mnt/install.sh
@@ -192,7 +192,7 @@ create_swap() {
     fallocate -l 4G /mnt/swapfile
     chmod 600 /mnt/swapfile
     mkswap /mnt/swapfile
-    swapon /mnt/swapfile
+    echo "/swapfile     none      swap      defaults,pri=-2 0 0" >> /mnt/etf/fstab
 }
 
 
@@ -204,10 +204,17 @@ install_base_system() {
 create_partition() {
     local part="$1"; shift
 
-    parted -s "$part" \
-        mklabel msdos \
-        mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
-        set 1 boot on
+    if [[ "$PARTITION_NUMBER" != "1" ]]; then
+        parted -s "$part" \
+            mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
+            set "$PARTITION_NUMBER" boot on
+    else
+        parted -s "$part" \
+            mklabel msdos \
+            mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
+            set "$PARTITION_NUMBER" boot on
+    fi
+
 }
 
 
