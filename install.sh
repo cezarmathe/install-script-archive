@@ -253,7 +253,7 @@ create_partition() {
     parted -s "$part" \
         mklabel msdos \
         mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
-        set 1 boot on
+        set "$PARTITION_NUMBER" boot on
 }
 
 
