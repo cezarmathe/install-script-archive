@@ -56,11 +56,11 @@ setup() {
     echo "Installing the base system"
     install_base_system
 
-    echo "Creating the swapfile"
-    create_swap
-
     echo "Setting the fs tab"
     set_fstab
+
+    echo "Creating the swapfile"
+    create_swap
 
     echo "Changing root to continue with system configuration"
     cp $0 /mnt/install.sh
@@ -238,7 +238,7 @@ create_swap() {
     fallocate -l 4G /mnt/swapfile
     chmod 600 /mnt/swapfile
     mkswap /mnt/swapfile
-    swapon /mnt/swapfile
+    echo "/swapfile     none      swap      defaults,pri=-2 0 0" >> /mnt/etf/fstab
 }
 
 
