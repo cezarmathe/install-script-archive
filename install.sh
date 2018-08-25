@@ -69,7 +69,6 @@ setup() {
     mkdir /mnt/aurman-install
     arch-chroot /mnt chown "$USER_NAME" aurman
 
-<<<<<<< HEAD
     echo "Changing root to continue with system configuration"
     cp $0 /mnt/install.sh
     cp pkg-install.sh /mnt/pkg-install.sh
@@ -80,20 +79,6 @@ setup() {
 
     post_install
 
-=======
-    arch-chroot -u "$USER_NAME" /mnt ./install.sh aurman
-
-    echo "Changing root to continue with system configuration"
-    cp $0 /mnt/install.sh
-    cp pkg-install.sh /mnt/pkg-install.sh
-    cp -r vars /mnt/vars
-    arch-chroot /mnt ./install.sh configuration
-
-    arch-chroot /mnt ./install.sh native
-
-    post_install
-
->>>>>>> developement
     if [ -f /mnt/install.sh ]
     then
         echo 'Error inside chroot'
@@ -149,7 +134,6 @@ post_install() {
     exit
 }
 
-<<<<<<< HEAD
 
 install_native_packages() {
     pacman --noconfirm -Syy
@@ -162,20 +146,6 @@ install_native_packages() {
                 exit
                 break;;
 
-=======
-
-install_native_packages() {
-    pacman --noconfirm -Syy
-    pacman -S git --needed --noconfirm
-    read -p "Do you want to install native packages from a package list?(y/n): " yn
-    case $yn in
-        [Yy]* ) read -p "Enter the URL where the package list is located:" URL
-                curl -L "$URL" -o packages.txt
-                ./pkg-install.sh native
-                exit
-                break;;
-
->>>>>>> developement
         [Nn]* ) echo "Skipping"
                 break;;
     esac
