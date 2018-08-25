@@ -66,17 +66,6 @@ setup() {
 
     arch-chroot /mnt ./install.sh native
 
-    mkdir /mnt/aurman-install
-    arch-chroot /mnt chown "$USER_NAME" aurman
-
-    echo "Changing root to continue with system configuration"
-    cp $0 /mnt/install.sh
-    cp pkg-install.sh /mnt/pkg-install.sh
-    cp -r vars /mnt/vars
-    arch-chroot /mnt ./install.sh configuration
-
-    arch-chroot /mnt ./install.sh native
-
     post_install
 
     if [ -f /mnt/install.sh ]
