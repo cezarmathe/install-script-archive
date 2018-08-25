@@ -250,10 +250,17 @@ install_base_system() {
 create_partition() {
     local part="$1"; shift
 
-    parted -s "$part" \
-        mklabel msdos \
-        mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
-        set "$PARTITION_NUMBER" boot on
+    if [[ "$PARTITION_NUMBER" != "1" ]]; then
+        parted -s "$part" \
+            mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
+            set "$PARTITION_NUMBER" boot on
+    else
+        parted -s "$part" \
+            mklabel msdos \
+            mkpart primary ext4 "$PARTITION_START" "$PARTITION_END" \
+            set "$PARTITION_NUMBER" boot on
+    fi
+
 }
 
 
