@@ -1,0 +1,45 @@
+---
+# Configuration file for the installation process
+
+# Commented lines will default to false
+
+setup_process:
+  user_interaction: 1
+
+boot:
+  make_efi_partition_if_uefi_detected: 1
+
+internet_connection:
+  wifi: 1
+
+partitions:
+  swap: 1
+  swap_location: "/swapfile"
+  partitions: []
+
+localization:
+  timezone: Europe/Bucharest
+  locale: en_US.UTF-8 UTF-8
+  locale_lang: en_US.UTF-8 
+
+network_config:
+  hostname: myhostname
+
+users:
+  root_password: my_Root-passWord
+  regular_users:
+  - username: yourusername
+    groups: ''
+    password: ''
+
+packages: 
+  packages_tarball_url : myexample.com
+
+
+bootloader:
+  bootloader_install_location: "/dev/sda"
+
+homedir_configs:
+  homedir_tarball_url: myexample.com
+  commands:
+  - xdg-user-dirs-update
