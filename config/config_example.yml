@@ -3,19 +3,31 @@
 
 # Commented lines will default to false
 
+# ???
 setup_process:
   user_interaction: 1
 
 boot:
-  make_efi_partition_if_uefi_detected: 1
+  # make_efi_partition_if_uefi_detected: 1
+  # uefi_partition_location: /dev/sda1
+  # uefi_partition_size: 500M
+  # uefi_partition_type: fat
 
 internet_connection:
-  wifi: 1
+  # wifi: 1
+  # ssid: AnSSID
+  # password: APassword
 
 partitions:
   swap: 1
   swap_location: "/swapfile"
-  partitions: []
+  partitions: 
+    - partition_name: "/dev/sda3"
+      mountpoint: "/mnt"
+      format: ext4
+    - partition_name: "/dev/sda4"
+      mountpoint: "/mnt/home"
+      format: no
 
 localization:
   timezone: Europe/Bucharest
@@ -33,13 +45,13 @@ users:
     password: ''
 
 packages: 
-  packages_tarball_url : myexample.com
+  # packages_tarball_url : myexample.com
 
 
 bootloader:
   bootloader_install_location: "/dev/sda"
 
 homedir_configs:
-  homedir_tarball_url: myexample.com
-  commands:
-  - xdg-user-dirs-update
+  # homedir_tarball_url: myexample.com
+  # commands:
+  # - xdg-user-dirs-update

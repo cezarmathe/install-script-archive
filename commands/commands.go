@@ -11,15 +11,14 @@ func ExecuteCommand(command string) {
 
 	cmd := strings.Fields(command)
 
-	out, err := exec.Command(cmd[0], cmd[1:]...).Output()
+	out, err := exec.Command(cmd[0], cmd[1:]...).CombinedOutput()
+
+	fmt.Println(string(out))
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-
-	fmt.Println(out)
-
 }
 
 func ExecuteLocalCommand(name string) {
@@ -37,5 +36,6 @@ func ExecuteLocalCommand(name string) {
 }
 
 func WaitForEnter() {
-	ExecuteLocalCommand("waitforenter")
+	fmt.Scanln()
+
 }
