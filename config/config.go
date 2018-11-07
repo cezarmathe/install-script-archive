@@ -7,17 +7,24 @@ import (
 )
 
 type Config struct {
-	Boot struct {
-		MakeEfiPartitionIfUefiDetected int `yaml:"make_efi_partition_if_uefi_detected"`
-	} `yaml:"boot"`
+	SetupProcess struct {
+		UserInteraction int `yaml:"user_interaction"`
+	} `yaml:"setup_process"`
 
 	InternetConnection struct {
-		Wifi int `yaml:"wifi"`
+		Wifi     int    `yaml:"wifi"`
+		SSID     string `yaml:"ssid"`
+		Password string `yaml:"password"`
 	} `yaml:"internet_connection"`
 
 	Partitions struct {
-		Swap         int    `yaml:"swap"`
-		SwapLocation string `yaml:"swap_location"`
+		Swap                 int    `yaml:"swap"`
+		SwapLocation         string `yaml:"swap_location"`
+		AdditionalPartitions []struct {
+			PartitionName string `yaml:"partition_name"`
+			Mountpoint    string `yaml:"mountpoint"`
+			Format        string `yaml:"format"`
+		} `yaml:"additional_partitions"`
 	} `yaml:"partitions"`
 
 	Localization struct {

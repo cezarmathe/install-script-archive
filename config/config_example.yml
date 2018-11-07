@@ -7,12 +7,6 @@
 setup_process:
   user_interaction: 1
 
-boot:
-  # make_efi_partition_if_uefi_detected: 1
-  # uefi_partition_location: /dev/sda1
-  # uefi_partition_size: 500M
-  # uefi_partition_type: fat
-
 internet_connection:
   # wifi: 1
   # ssid: AnSSID
@@ -21,7 +15,7 @@ internet_connection:
 partitions:
   swap: 1
   swap_location: "/swapfile"
-  partitions: 
+  additional_partitions: 
     - partition_name: "/dev/sda3"
       mountpoint: "/mnt"
       format: ext4
@@ -41,15 +35,17 @@ users:
   root_password: my_Root-passWord
   regular_users:
   - username: yourusername
-    groups: ''
-    password: ''
+    groups: "power,storage,wheel"
+    password: 'a-password'
 
 packages: 
   # packages_tarball_url : myexample.com
 
 
 bootloader:
-  bootloader_install_location: "/dev/sda"
+  bootloader_install_commands:
+    - grub-install
+    - mount
 
 homedir_configs:
   # homedir_tarball_url: myexample.com
